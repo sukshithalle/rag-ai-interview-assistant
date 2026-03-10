@@ -1,0 +1,445 @@
+Graphs – Complete Notes for Placements
+
+1. Basics of Graphs
+Definition: A graph is a collection of nodes (vertices) connected by edges.
+Types:
+Undirected Graph → edges have no direction (u ↔ v).
+Directed Graph (Digraph) → edges have direction (u → v).
+Weighted Graph → edges have weights (costs).
+Unweighted Graph → edges have no weights.
+Cyclic vs Acyclic
+Connected vs Disconnected
+
+-> A cyclic graph contains at least one cycle, which is a path of edges that starts and ends at the same vertex without repeating any edges or vertices. 
+In contrast, an acyclic graph contains no such cycles, meaning you cannot return to your starting vertex by following a path of connected edges.
+-> A graph is connected if there's a path between any two vertices, allowing you to travel from any vertex to any other. 
+In contrast, a disconnected graph is one where there is at least one pair of vertices for which no path exists. 
+
+2. Graph Representations
+
+Adjacency Matrix
+n x n matrix, matrix[u][v] = 1 if edge exists.
+Pros: Easy to check edge existence.
+Cons: Uses O(V^2) space.
+Useful when graph is dense.
+-> A dense graph is a type of graph where the number of edges is close to the maximum possible number of edges for a given number of vertices.
+-> 1. Adjacency Matrix for Undirected and Unweighted graph:Consider an Undirected and Unweighted graph G with 4 vertices and 3 edges. 
+For the graph G, the adjacency matrix would look like:https://media.geeksforgeeks.org/wp-content/uploads/20240424142649/Adjacency-Matrix-for-Undirected-and-Unweighted-graph.webp
+->public static void addEdge(int[][] mat, int i, int j) {
+        mat[i][j] = 1;
+        mat[j][i] = 1; // Since the graph is undirected
+    }  addEdge(mat, 0, 1);
+
+-> 2. Adjacency Matrix for Undirected and Weighted graph:
+Consider an Undirected and Weighted graph G with 5 vertices and 5 edges. For the graph G, the adjacency matrix would look like:
+https://media.geeksforgeeks.org/wp-content/uploads/20240424142706/Adjacency-Matrix-for-Undirected-and-Weighted-graph.webp
+A[i][j] ​= INF, then there is no edge between vertex i and j
+A[i][j] ​= w, then there is an edge between vertex i and j having weight = w.
+
+-> 3. Adjacency Matrix for Directed and Unweighted graph:Consider an Directed and Unweighted graph G with 4 vertices and 4 edges. For the graph G, the adjacency matrix would look like:
+https://media.geeksforgeeks.org/wp-content/uploads/20240424142803/Adjacency-Matrix-for-Directed-and-Unweighted-graph.webp
+
+->4. Adjacency Matrix for Directed and Weighted graph:Consider an Directed and Weighted graph G with 5 vertices and 6 edges. For the graph G, the adjacency matrix would look like:
+https://media.geeksforgeeks.org/wp-content/uploads/20240424142833/Adjacency-Matrix-for-Directed-and-Weighted-graph.webp
+
+-> Properties of Adjacency Matrix
+Diagonal Entries: The diagonal entries A[i][j] are usually set to 0 (in case of unweighted) and INF in case of weighted, assuming the graph has no self-loops.
+Undirected Graphs: For undirected graphs, the adjacency matrix is symmetric. This means A[i][j] ​= A[j][i]​ for all i and j.
+
+-> Degree of Vertices: The degree of a vertex in a graph is the number of edges incident to it. In an undirected graph, the degree of a vertex can be calculated by summing the entries in the 
+corresponding row (or column) of the adjacency matrix. In a directed graph, the in-degree and out-degree of a vertex can be similarly determined.
+
+Adjacency List
+
+Each vertex stores a list of neighbors.
+Pros: Space efficient for sparse graphs.
+Cons: Slower to check if an edge exists.
+Most commonly used in interviews.
+-> A sparse graph is a graph with relatively few edges compared to the maximum number of edges possible for the given number of vertices. 
+
+-> 1. Adjacency List for Directed graph: 
+static void addEdge(List<List<Integer>> adj, int u, int v) {
+        adj.get(u).add(v); }
+-> 2. Adjacency List for Undirected graph:
+static void addEdge(List<List<Integer>> adj, int u, int v) {
+        adj.get(u).add(v);
+      	adj.get(v).add(u);}
+-> 3. Adjacency List for Directed and Weighted graph:
+static void addEdge(List<List<SimpleEntry<Integer, Integer>>> adj, int u, int v, int w) {
+        adj.get(u).add(new SimpleEntry<>(v, w));}
+-> 4. Adjacency List for Undirected and Weighted graph:
+static void addEdge(List<List<SimpleEntry<Integer, Integer>>> adj, int u, int v, int w) {
+        adj.get(u).add(new SimpleEntry<>(v, w));
+        adj.get(v).add(new SimpleEntry<>(u, w));}
+
+3. Graph Traversals
+
+BFS (Breadth-First Search)
+Level-wise traversal (uses queue).
+Useful for shortest path in unweighted graphs.
+Time Complexity: O(V + E) and O(V) Space.
+code template :
+void bfs(int start, ArrayList<ArrayList<Integer>> adj, int V) {
+    boolean[] visited = new boolean[V];
+    Queue<Integer> q = new LinkedList<>();
+    
+    visited[start] = true;
+    q.add(start);
+    
+    while (!q.isEmpty()) {
+        int node = q.poll();
+        System.out.print(node + " ");
+        
+        for (int neigh : adj.get(node)) {
+            if (!visited[neigh]) {
+                visited[neigh] = true;
+                q.add(neigh);
+            }
+        }
+    }
+}
+
+DFS (Depth-First Search)
+Goes as deep as possible (uses recursion or stack).
+Useful for cycle detection, connected components, topological sort.
+Time Complexity: O(V + E) and O(V) Space
+Template (recursive):
+void dfs(int node, boolean[] visited, ArrayList<ArrayList<Integer>> adj) {
+    visited[node] = true;
+    System.out.print(node + " ");
+    
+    for (int neigh : adj.get(node)) {
+        if (!visited[neigh]) {
+            dfs(neigh, visited, adj);
+        }
+    }
+}
+
+public void dfsIterative(int start) {
+        boolean[] visited = new boolean[V];
+        Stack<Integer> stack = new Stack<>();
+
+        stack.push(start);
+
+        while (!stack.isEmpty()) {
+            int node = stack.pop();
+
+            if (!visited[node]) {
+                visited[node] = true;
+                System.out.print(node + " "); // process node
+
+                // Push neighbors (reverse order for consistent traversal)
+                List<Integer> neighbors = adj.get(node);
+                for (int i = neighbors.size() - 1; i >= 0; i--) {
+                    int neighbor = neighbors.get(i);
+                    if (!visited[neighbor]) {
+                        stack.push(neighbor);
+                    }
+                }
+}   }    }    
+
+4. Important Graph Problems for Interviews
+
+1 Connected Components
+Count number of disconnected parts.
+Use DFS/BFS.
+
+// Count connected components
+    public int countConnectedComponents() {
+        boolean[] visited = new boolean[V];
+        int components = 0;
+
+        for (int i = 0; i < V; i++) {
+            if (!visited[i]) {
+                components++;
+                dfs(i, visited);
+            }
+        }
+        return components;
+}
+If component count > 1 → Graph is disconnected.
+If component count == 1 → Graph is connected (completely connected).
+A complete connected component means that within that component, every pair of vertices is directly connected by an edge.
+Let k = number of nodes in component.
+In a complete graph, number of edges should be k * (k - 1) / 2.
+
+2. Cycle Detection
+Undirected Graph: Use DFS with parent check.
+Directed Graph: Use DFS with recursion stack (or Kahn’s Algorithm in DAG).
+import java.util.*;
+
+class Solution {
+    public boolean hasCycle(int n, int[][] edges) {
+        // Build adjacency list
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < n; i++) graph.add(new ArrayList<>());
+        for (int[] e : edges) {
+            graph.get(e[0]).add(e[1]);
+            graph.get(e[1]).add(e[0]);
+        }
+
+        boolean[] visited = new boolean[n];
+
+        // Check each component
+        for (int i = 0; i < n; i++) {
+            if (!visited[i]) {
+                if (dfs(i, -1, graph, visited)) return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean dfs(int node, int parent, List<List<Integer>> graph, boolean[] visited) {
+        visited[node] = true;
+
+        for (int neigh : graph.get(node)) {
+            if (!visited[neigh]) {
+                if (dfs(neigh, node, graph, visited)) return true;
+            } 
+            // If neighbor is visited and not the parent -> cycle
+            else if (neigh != parent) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+import java.util.*;
+
+class Solution {
+    public boolean hasCycle(int n, int[][] edges) {
+        // Build adjacency list
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < n; i++) graph.add(new ArrayList<>());
+        for (int[] e : edges) {
+            graph.get(e[0]).add(e[1]);
+            graph.get(e[1]).add(e[0]);
+        }
+
+        boolean[] visited = new boolean[n];
+
+        // Check each disconnected component
+        for (int i = 0; i < n; i++) {
+            if (!visited[i]) {
+                if (bfs(i, graph, visited)) return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean bfs(int start, List<List<Integer>> graph, boolean[] visited) {
+        Queue<int[]> q = new LinkedList<>(); // store {node, parent}
+        q.offer(new int[]{start, -1});
+        visited[start] = true;
+
+        while (!q.isEmpty()) {
+            int[] curr = q.poll();
+            int node = curr[0], parent = curr[1];
+
+            for (int neigh : graph.get(node)) {
+                if (!visited[neigh]) {
+                    visited[neigh] = true;
+                    q.offer(new int[]{neigh, node});
+                } 
+                // If neighbor is visited and not the parent → cycle
+                else if (neigh != parent) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+}
+
+-> Core Idea:
+A cycle in a directed graph exists if, during DFS, we visit a node that is already in the current recursion path (not just visited earlier, but still part of the active call stack).
+That’s why we use an additional array inStack[].
+import java.util.*;
+
+class SolutionDFS {
+    public boolean hasCycle(int n, int[][] edges) {
+        // Build adjacency list
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < n; i++) graph.add(new ArrayList<>());
+        for (int[] e : edges) graph.get(e[0]).add(e[1]);
+
+        boolean[] visited = new boolean[n];
+        boolean[] inStack = new boolean[n];
+
+        for (int i = 0; i < n; i++) {
+            if (!visited[i]) {
+                if (dfs(i, graph, visited, inStack)) return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean dfs(int node, List<List<Integer>> graph, boolean[] visited, boolean[] inStack) {
+        visited[node] = true;
+        inStack[node] = true;
+
+        for (int neigh : graph.get(node)) {
+            if (!visited[neigh] && dfs(neigh, graph, visited, inStack)) {
+                return true;
+            } else if (inStack[neigh]) { 
+                // Found back edge → cycle
+                return true;
+            }
+        }
+        inStack[node] = false; // backtrack
+        return false;
+    }
+}
+Interview One-Liner:
+“This approach works by using DFS and a recursion stack to detect back edges. If we encounter a node that is already in the recursion stack, it means we’ve found a cycle in the directed graph.”
+
+2. Kahn’s Algorithm (BFS Topological Sort)
+If graph has a cycle → not all nodes will be included in the topological order.
+
+import java.util.*;
+
+class SolutionKahn {
+    public boolean hasCycle(int n, int[][] edges) {
+        // Build graph + indegree
+        List<List<Integer>> graph = new ArrayList<>();
+        int[] indegree = new int[n];
+        for (int i = 0; i < n; i++) graph.add(new ArrayList<>());
+        for (int[] e : edges) {
+            graph.get(e[0]).add(e[1]);
+            indegree[e[1]]++;
+        }
+
+        // Push all nodes with 0 indegree
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < n; i++) {
+            if (indegree[i] == 0) q.offer(i);
+        }
+
+        int count = 0;
+        while (!q.isEmpty()) {
+            int node = q.poll();
+            count++;
+            for (int neigh : graph.get(node)) {
+                indegree[neigh]--;
+                if (indegree[neigh] == 0) q.offer(neigh);
+            }
+        }
+
+        // If all nodes are not processed → cycle exists
+        return count != n;
+    }
+}
+Intuition
+Topological Sort works only on Directed Acyclic Graphs (DAGs).
+If a cycle exists, not all nodes can be included in a topological order, because some nodes will always depend on each other (circular dependency).
+Kahn’s Algorithm uses indegree (number of incoming edges) to detect this.
+
+3. Topological Sort
+Ordering of nodes in Directed Acyclic Graph (DAG).
+DFS based or Kahn’s Algorithm (BFS + in-degree).
+-> A topological order of a graph is a linear ordering of vertices such that for every directed edge u → v, u comes before v in the ordering.
+Topological Sort is only possible in a Directed Acyclic Graph (DAG).If there’s a cycle, no valid ordering exists.
+-> Approaches
+1. DFS-based Topological Sort
+Perform DFS.
+After visiting all neighbors of a node, push the node into a stack.
+At the end, reverse the stack (or pop from stack to get order).
+Works only if no cycle exists.
+import java.util.*;
+
+class TopoSortDFS {
+    public List<Integer> topoSort(int n, int[][] edges) {
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < n; i++) graph.add(new ArrayList<>());
+        for (int[] e : edges) graph.get(e[0]).add(e[1]);
+
+        boolean[] visited = new boolean[n];
+        Stack<Integer> stack = new Stack<>();
+
+        for (int i = 0; i < n; i++) {
+            if (!visited[i]) dfs(i, graph, visited, stack);
+        }
+
+        List<Integer> result = new ArrayList<>();
+        while (!stack.isEmpty()) result.add(stack.pop());
+        return result;
+    }
+
+    private void dfs(int node, List<List<Integer>> graph, boolean[] visited, Stack<Integer> stack) {
+        visited[node] = true;
+        for (int neigh : graph.get(node)) {
+            if (!visited[neigh]) dfs(neigh, graph, visited, stack);
+        }
+        stack.push(node);
+    }
+}
+2. Kahn’s Algorithm (BFS + In-degree)
+Compute in-degree of each node.
+Start with nodes having in-degree = 0.
+Remove them from the graph (reduce neighbors’ in-degree).
+Keep adding to result list.
+If all nodes are processed → topological order exists.
+Otherwise, there’s a cycle.
+Key Idea:
+If graph has cycle → no topo sort.
+If graph is a DAG → unique or multiple valid orders exist.
+
+4. Shortest Path
+Unweighted Graph: BFS.
+Weighted Graph (non-negative): Dijkstra’s Algorithm.
+With negative edges: Bellman-Ford.
+All-pairs shortest path: Floyd-Warshall.
+
+5. Minimum Spanning Tree (MST)
+Connect all nodes with minimum cost.
+Kruskal’s Algorithm (Greedy, Union-Find).
+Prim’s Algorithm (Priority Queue).
+
+6. Bipartite Graph Check
+Use BFS/DFS with coloring.
+
+7. Flood Fill / Islands Problems
+Classic DFS/BFS on 2D grid.
+
+5. Complexities
+
+Adjacency List: O(V + E) for traversal.
+Adjacency Matrix: O(V^2).
+BFS/DFS → O(V + E)
+Dijkstra → O((V + E) log V) with priority queue.
+Bellman-Ford → O(V * E)
+Floyd-Warshall → O(V^3)
+Kruskal → O(E log E)
+Prim → O(E log V)
+
+6. Interview Tips
+
+✅ Always clarify:
+Directed / Undirected?
+Weighted / Unweighted?
+Dense / Sparse?
+
+✅ Think in terms of templates:
+Traversals → BFS/DFS.
+Shortest path → BFS / Dijkstra / Bellman-Ford.
+Cycle detection → parent check / recursion stack.
+Topological order → Kahn’s / DFS.
+MST → Kruskal / Prim.
+✅ Practice grid problems as graphs (LeetCode: Islands, Rotten Oranges, Word Ladder).
+
+7. Recommended Problems (LeetCode/Codeforces/GFG)
+
+BFS / DFS:
+Number of Islands (LC 200)
+Rotting Oranges (LC 994)
+Flood Fill (LC 733)
+Shortest Path:
+Shortest Path in Binary Matrix (LC 1091)
+Network Delay Time (LC 743)
+Dijkstra template problems
+Cycle Detection / Topological Sort:
+Course Schedule (LC 207)
+Course Schedule II (LC 210)
+MST:
+Kruskal + Prim problems (GFG: Minimum Spanning Tree).

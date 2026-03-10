@@ -1,0 +1,1077 @@
+Introduction to Tree data structure ---
+Tree data structure is a hierarchical data structure which is used to represent and organize data in form of parent child relationship.
+
+The following are some real world situations which are naturally a tree :
+Folder structure in an operating system.
+Tag structure in an HTML (root tag the as html tag) or XML document.
+
+Basic Terminologies In Tree Data Structure:
+* Parent Node: The node which is an immediate predecessor of a node is called the parent node of that node. 
+* Child Node: The node which is the immediate successor of a node is called the child node of that node. 
+* Root Node: The topmost node of a tree or the node which does not have any parent node is called the root node. 
+* Leaf Node or External Node: The nodes which do not have any child nodes are called leaf nodes. 
+* Ancestor of a Node: Any predecessor nodes on the path of the root to that node are called Ancestors of that node. 
+* Descendant: A node x is a descendant of another node y if and only if y is an ancestor of x.
+* Sibling: Children of the same parent node are called siblings. 
+* Level of a node: The count of edges on the path from the root node to that node. The root node has level 0.
+* Internal node: A node with at least one child is called Internal Node.
+* Neighbour of a Node: Parent or child nodes of that node are called neighbors of that node.
+* Subtree: Any node of the tree along with its descendant.
+
+https://media.geeksforgeeks.org/wp-content/uploads/20250214120937877633/treeTerminologies.webp
+
+Representation of Tree Data Structure:
+A tree consists of a root node, and zero or more subtrees T1, T2, ... , Tk such that there is an edge from the root node of the tree to the root node of each subtree. 
+Subtree of a node X consists of all the nodes which have node X as the ancestor node.
+https://media.geeksforgeeks.org/wp-content/uploads/20240424105009/Representation-of-Tree-Data-Structure.webp
+
+public static class Node {
+    int data;
+    Node first_child;
+    Node second_child;
+    Node third_child;
+    .
+    .
+    .
+    Node nth_child;
+}
+
+Importance for Tree Data Structure:
+One reason to use trees might be because you want to store information that naturally forms a hierarchy. 
+For example, the file system on a computer: The DOM model of an HTML page is also tree where we have html tag as root, 
+head and body its children and these tags, then have their own children.
+
+The main types of trees in data structure are:
+1. Binary Tree
+A binary tree is a tree data structure where each node has at most two children. These two children are usually referred to as the left child and right child. 
+It is widely used in applications such as binary search trees and heaps.
+Example: Consider the tree below. Since each node of this tree has only 2 children, it can be said that this tree is a Binary Tree
+https://media.geeksforgeeks.org/wp-content/uploads/20221124091613/binary.png
+
+2. Ternary Tree
+A Ternary Tree is a tree data structure in which each node has at most three child nodes, usually distinguished as “left”, “mid” and “right”.
+Example: Consider the tree below. Since each node of this tree has only 3 children, it can be said that this tree is a Ternary Tree.
+https://media.geeksforgeeks.org/wp-content/uploads/20221125131351/ternary1.png
+Examples of Ternary Tree:
+Ternary Search Tree: A ternary search tree is a special trie data structure where the child nodes of a standard trie are ordered as a binary search tree.
+Ternary Heap: A type of heap where each node can have up to three children, though less common than binary heaps.
+
+3. N-ary Tree (Generic Tree)
+Generic trees are a collection of nodes where each node is a data structure that consists of records and a list of references to its children(duplicate references are not allowed). 
+Unlike the linked list, each node stores the address of multiple nodes. 
+Every node stores the addresses of its children and the very first node’s address will be stored in a separate pointer called root.
+ 1. Many children at every node.
+ 2. The number of nodes for each node is not known in advance.
+Example:https://media.geeksforgeeks.org/wp-content/uploads/20221124092620/Nary.png
+Examples of N-ary Trees:
+B-tree: A self-balancing search tree where nodes can have multiple children, usually used for indexing large databases.
+B+ Tree: A B+ tree is a variation of the B-tree that only stores data in the leaf nodes, making range queries more efficient.
+Trie (Prefix Tree): A tree where each node represents a character, and paths from the root to leaves represent strings. 
+It can have a variable number of children for each node, making it an N-ary tree.
+
+Basic Operations Of Tree Data Structure:
+Create – create a tree in the data structure.
+Insert − Inserts data in a tree.
+Search − Searches specific data in a tree to check whether it is present or not.
+Traversal:
+Depth-First-Search Traversal
+Breadth-First-Search Traversal
+
+Applications of Trees
+File systems, compilers (expression trees), AI (decision trees), DB indexing (B-Trees, B+ Trees), routers (Tries).
+
+Advantages
+Hierarchical storage (natural fit for many problems).
+Faster searching & sorting (BST, balanced trees).
+Efficient memory organization (tries, heaps).
+
+Disadvantages
+Complex implementation compared to arrays and linked lists.
+Requires more memory (pointers/references).
+Traversal is slower than arrays due to cache-unfriendly memory access.
+
+Step 1: Binary Tree Basics
+1. Representation of a Binary Tree ---
+A Binary Tree is a hierarchical structure in which each node has at most two children → usually called left and right child.
+Node Representation 
+class Node {
+    int data;
+    Node left, right;
+
+    Node(int data) {
+        this.data = data;
+        left = right = null;
+    }
+}
+        1
+       / \
+      2   3
+     / \    
+    4   5
+
+Here:
+1 is root
+2 is left child of 1, 3 is right child of 1
+4 and 5 are children of 2
+
+2. Basic Terminologies in Binary Trees --- 
+Root: The topmost node (e.g., 1 in the example).
+Parent: A node that has children (e.g., 2 is parent of 4 and 5).
+Child: Nodes directly below a parent (e.g., 4 is child of 2).
+Leaf (External Node): Nodes with no children (e.g., 4, 5, 3).
+Internal Node: A node with at least one child (e.g., 1, 2).
+Sibling: Nodes having the same parent (e.g., 4 and 5).
+Level of a Node: Distance from root (root = level 0, children = level 1).
+Height of a Node: Number of edges on the longest path to a leaf.
+Height of Tree: Height of root node.
+Depth of Node: Number of edges from root to that node.
+
+3. Creating a Binary Tree ---
+class BinaryTree {
+    Node root;
+
+    BinaryTree() {
+        root = null;
+    }
+
+    public static void main(String[] args) {
+        BinaryTree tree = new BinaryTree();
+
+        // Manually creating the example tree
+        tree.root = new Node(1);
+        tree.root.left = new Node(2);
+        tree.root.right = new Node(3);
+        tree.root.left.left = new Node(4);
+        tree.root.left.right = new Node(5);
+
+        System.out.println("Tree created manually!");
+    }
+}
+
+4. Simple Insertion ---
+import java.util.*;
+
+class BinaryTreeInsert {
+    Node root;
+
+    void insert(int data) {
+        Node newNode = new Node(data);
+
+        if (root == null) {
+            root = newNode;
+            return;
+        }
+
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(root);
+
+        while (!queue.isEmpty()) {
+            Node temp = queue.poll();
+
+            if (temp.left == null) {
+                temp.left = newNode;
+                break;
+            } else queue.add(temp.left);
+
+            if (temp.right == null) {
+                temp.right = newNode;
+                break;
+            } else queue.add(temp.right);
+        }
+    }
+}
+
+5. Height of a Binary Tree ---
+int height(Node root) {
+    if (root == null) return 0;
+    return 1 + Math.max(height(root.left), height(root.right));
+}
+
+6. Traversals (DFS Variants) ---
+Inorder Traversal (Left → Root → Right) ->
+void inorder(Node root) {
+    if (root == null) return;
+    inorder(root.left);
+    System.out.print(root.data + " ");
+    inorder(root.right);
+}
+
+Preorder Traversal (Root → Left → Right) ->
+void preorder(Node root) {
+    if (root == null) return;
+    System.out.print(root.data + " ");
+    preorder(root.left);
+    preorder(root.right);
+}
+
+Postorder Traversal (Left → Right → Root) ->
+void postorder(Node root) {
+    if (root == null) return;
+    postorder(root.left);
+    postorder(root.right);
+    System.out.print(root.data + " ");
+}
+
+Time Complexity of Basic Binary Tree Operations ---
+| **Operation**                                     | **Time Complexity**                                        | **Why?**                                                   |
+| ------------------------------------------------- | ---------------------------------------------------------- | ---------------------------------------------------------- |
+| **Traversal (Inorder, Preorder, Postorder, BFS)** | **O(n)**                                                   | Each node is visited exactly once.                         |
+| **Height of Tree**                                | **O(n)**                                                   | In the worst case, you visit all nodes to compute height.  |
+| **Depth of a Node**                               | **O(h)** (h = height of tree, max O(n))                    | Need to traverse from root down to the node.               |
+| **Search (Unordered Binary Tree)**                | **O(n)**                                                   | Must check all nodes (no ordering).                        |
+| **Insert (Unordered Binary Tree)**                | **O(n)**                                                   | Insert by level-order → might need to traverse many nodes. |
+| **Search (BST)**                                  | **O(h)** → O(log n) for balanced BST, O(n) for skewed tree | Property: left < root < right helps prune search.          |
+| **Insert (BST)**                                  | **O(h)** → O(log n) balanced, O(n) skewed                  | Traverses like search, inserts at leaf.                    |
+| **Delete (BST)**                                  | **O(h)** → O(log n) balanced, O(n) skewed                  | Needs search + restructuring.                              |
+
+Recursive vs Iterative Traversals ---
+
+Recursive Traversals
+Code is shorter and cleaner.
+Directly follows the definition of traversal.
+Uses the system call stack for recursion.
+Depth of recursion = height of tree (h).
+Worst case → O(n) stack space for a skewed tree.
+Best case → O(log n) stack space for a balanced tree.
+
+Iterative Traversals
+Avoid recursion, use explicit stack/queue.
+Useful when recursion depth may cause StackOverflowError (for very deep trees).
+Code is longer, but gives better control.
+Same time complexity O(n), but space is also O(h) (stack size or queue size).
+
+Iterative Inorder =
+void inorderIterative(Node root) {
+    Stack<Node> stack = new Stack<>();
+    Node curr = root;
+
+    while (curr != null || !stack.isEmpty()) {
+        while (curr != null) {
+            stack.push(curr);
+            curr = curr.left;
+        }
+        curr = stack.pop();
+        System.out.print(curr.data + " ");
+        curr = curr.right;
+    }
+}
+
+Iterative Preorder =
+void preorderIterative(Node root) {
+    if (root == null) return;
+    Stack<Node> stack = new Stack<>();
+    stack.push(root);
+
+    while (!stack.isEmpty()) {
+        Node curr = stack.pop();
+        System.out.print(curr.data + " ");
+
+        if (curr.right != null) stack.push(curr.right);
+        if (curr.left != null) stack.push(curr.left);
+    }
+}
+
+Iterative Postorder =
+void postorderIterative(Node root) {
+    if (root == null) return;
+    Stack<Node> stack1 = new Stack<>();
+    Stack<Node> stack2 = new Stack<>();
+
+    stack1.push(root);
+    while (!stack1.isEmpty()) {
+        Node curr = stack1.pop();
+        stack2.push(curr);
+
+        if (curr.left != null) stack1.push(curr.left);
+        if (curr.right != null) stack1.push(curr.right);
+    }
+
+    while (!stack2.isEmpty()) {
+        System.out.print(stack2.pop().data + " ");
+    }
+}
+
+Example: BFS (Level Order Traversal) =
+void levelOrder(Node root) {
+    if (root == null) return;
+
+    Queue<Node> queue = new LinkedList<>();
+    queue.add(root);
+
+    while (!queue.isEmpty()) {
+        Node temp = queue.poll();
+        System.out.print(temp.data + " ");
+
+        if (temp.left != null) queue.add(temp.left);
+        if (temp.right != null) queue.add(temp.right);
+    }
+}
+
+Recursive vs Iterative: Which is Better? ---
+| Aspect               | **Recursive**                              | **Iterative**                                 |
+| -------------------- | ------------------------------------------ | --------------------------------------------- |
+| **Code Readability** | Cleaner, shorter                           | Longer, more complex                          |
+| **Memory Usage**     | Uses **call stack** (O(h))                 | Uses **explicit stack/queue** (O(h))          |
+| **Risk**             | May cause **StackOverflow** for deep trees | No stack overflow risk                        |
+| **Control**          | Harder to modify mid-traversal             | Easier to control traversal                   |
+| **Interview Use**    | Often expected first                       | Good follow-up when asked “without recursion” |
+
+Morris Traversal algorithm, and it’s a game changer because it performs traversal with O(1) extra space (no recursion, no stack).
+Morris Traversal (O(1) Space Traversal)
+Idea
+Instead of using recursion/stack, it reuses the null right pointers of the tree temporarily.
+It establishes a threaded link (a temporary pointer) to help return to the parent after visiting the left subtree.
+After traversal, it restores the tree back to normal (no modification remains).
+
+High-level idea (what Morris does)
+Morris Inorder Traversal visits nodes in inorder (Left → Root → Right) without recursion and without an explicit stack, using only O(1) extra space.
+It does this by temporarily creating a “thread” from an inorder predecessor (the rightmost node in the current node’s left subtree) back to the current node. 
+That thread lets the algorithm return to the parent after finishing the left subtree — like the recursion would — and then the thread is removed.
+
+Variants & notes
+Morris Preorder: print the node when you first encounter it (i.e., before creating the thread), otherwise identical thread logic.
+Morris Postorder: trickier. You can do postorder in O(1) space with additional tricks (reverse paths) but it’s more complex.
+Works only on proper binary trees (no shared nodes, no cycles) — normal tree assumption.
+Temporary modification: the algorithm modifies right pointers temporarily but restores them before finishing. If you have references to the tree while traversal runs concurrently, that could be unsafe.
+No recursion → no StackOverflow: useful for very deep (skewed) trees where recursion would overflow.
+
+Morris Inorder Traversal =
+void morrisInorder(Node root) {
+    Node curr = root;
+    while (curr != null) {
+        if (curr.left == null) {
+            System.out.print(curr.data + " ");
+            curr = curr.right;
+        } else {
+            // Find the inorder predecessor of curr
+            Node pre = curr.left;
+            while (pre.right != null && pre.right != curr) {
+                pre = pre.right;
+            }
+
+            if (pre.right == null) {
+                // Make temporary link
+                pre.right = curr;
+                curr = curr.left;
+            } else {
+                // Remove the link
+                pre.right = null;
+                System.out.print(curr.data + " ");
+                curr = curr.right;
+            }
+        }
+    }
+}
+
+Morris Preorder Traversal =
+void morrisPreorder(Node root) {
+    Node curr = root;
+    while (curr != null) {
+        if (curr.left == null) {
+            System.out.print(curr.data + " ");
+            curr = curr.right;
+        } else {
+            // Find predecessor
+            Node pre = curr.left;
+            while (pre.right != null && pre.right != curr) {
+                pre = pre.right;
+            }
+
+            if (pre.right == null) {
+                // Before visiting left, print current
+                System.out.print(curr.data + " ");
+                pre.right = curr;
+                curr = curr.left;
+            } else {
+                pre.right = null;
+                curr = curr.right;
+            }
+        }
+    }
+}
+
+Comparison with Recursive & Iterative Traversals ---
+| Method                     | Time | Space    | Notes                                            |
+| -------------------------- | ---- | -------- | ------------------------------------------------ |
+| Recursive DFS              | O(n) | O(h)     | Clean code, risk of stack overflow for deep tree |
+| Iterative DFS (with stack) | O(n) | O(h)     | No recursion, explicit stack                     |
+| BFS (queue)                | O(n) | O(w)     | `w` = max width of tree                          |
+| **Morris Traversal**       | O(n) | **O(1)** | Best space, modifies tree temporarily            |
+
+Morris Traversal is most famous for inorder, but can also be adapted for preorder.There’s no clean Morris version for postorder (it requires trickier modifications).
+
+Comparison (what you should say if asked which is better):
+Recursive: Clean & short, but may cause stack overflow if tree is very deep.
+Iterative: Uses explicit stack/queue, safe from recursion depth issues.
+Morris: No extra space, but a bit harder to understand & temporarily modifies tree.
+
+BFS vs DFS in Binary Trees ---
+1. DFS (Depth First Search)
+Explores as deep as possible along each branch before backtracking.
+Traversals (recursive/iterative) are DFS-based:
+Preorder → Root → Left → Right
+Inorder → Left → Root → Right
+Postorder → Left → Right → Root
+Implemented with recursion (call stack) or an explicit stack.
+Time Complexity: O(N)
+Space Complexity:
+O(H) recursion stack (H = tree height, O(log N) in balanced tree, O(N) in skewed tree).
+Iterative → explicit stack also O(H).
+
+2. BFS (Breadth First Search) → Level Order Traversal
+Explores all nodes at the current level before moving to the next.
+Requires a queue (FIFO).
+Useful for shortest path, level-wise processing, and hierarchical problems.
+Time Complexity: O(N)
+Space Complexity: O(W) → where W = maximum width of the tree (can be up to O(N) in a complete tree).
+BFS (Level Order Traversal) ---
+void levelOrder(Node root) {
+    if (root == null) return;
+
+    Queue<Node> queue = new LinkedList<>();
+    queue.add(root);
+
+    while (!queue.isEmpty()) {
+        Node node = queue.poll();
+        System.out.print(node.data + " ");
+        
+        if (node.left != null) queue.add(node.left);
+        if (node.right != null) queue.add(node.right);
+    }
+}
+BFS vs DFS (Interview Pointers)
+DFS → Better for tree traversals, deep problems (like diameter, path sum).
+BFS → Better for shortest path, level order, "minimum" problems (like min depth).
+DFS Space → O(H), BFS Space → O(W).
+Balanced trees → both work efficiently.
+Skewed trees → DFS may take O(N) space, BFS may blow up on wide levels.
+
+* Practice Problems ---
+Build a binary tree manually and print inorder, preorder, postorder.
+Count number of nodes, number of leaves.
+Find the height of the tree.
+Mirror/Invert a binary tree.(can be solved using recursion or dfs or bfs)
+
+* Step 2 ---- Core Concepts 
+
+Depth vs Height :
+Depth
+Depth of a node = number of edges from the root to that node.
+Depth of the tree = maximum depth among all nodes (i.e., distance from root to the deepest node).
+Root node → depth = 0.
+Think: How far down is this node from the root?
+
+Height
+Height of a node = number of edges on the longest path from that node down to a leaf.
+Height of the tree = height of the root.
+Leaf node → height = 0.
+Think: How far up is this node from the farthest leaf?
+
+Quick way to remember
+Depth → measure from root downward.
+Height → measure from leaf upward.
+For the root: height(root) = depth(tree).  
+
+For Depth of a Node
+public int findDepth(TreeNode root, TreeNode target) {
+    if (root == null) return -1;
+    if (root == target) return 0;
+
+    int left = findDepth(root.left, target);
+    int right = findDepth(root.right, target);
+
+    if (left != -1) return left + 1;
+    if (right != -1) return right + 1;
+
+    return -1; // node not found
+}
+
+Height of a specific node 
+public int height(TreeNode node) {
+    if (node == null) return -1; // or 0 if you define leaf height = 0
+    if (node.left == null && node.right == null) return 0;
+
+    int leftHeight = height(node.left);
+    int rightHeight = height(node.right);
+
+    return 1 + Math.max(leftHeight, rightHeight);
+}
+
+1 What is Diameter?
+The diameter of a tree = the length (number of edges) of the longest path between any two nodes in the tree.
+That path does not necessarily pass through the root.
+The diameter of tree = maximum of:
+diameter of left subtree
+diameter of right subtree
+longest path through current node 
+class Solution {
+    int diameter = 0;
+
+    public int diameterOfBinaryTree(TreeNode root) {
+        height(root);
+        return diameter;
+    }
+
+    private int height(TreeNode node) {
+        if (node == null) return 0;
+
+        int leftHeight = height(node.left);
+        int rightHeight = height(node.right);
+
+        // update diameter if path through this node is longer
+        diameter = Math.max(diameter, leftHeight + rightHeight);
+
+        // return height of current node
+        return 1 + Math.max(leftHeight, rightHeight);
+    }
+}
+Complexity: O(n) time, O(h) recursion space.
+Note: For edges-counted diameter return maxDiameter - 1.
+
+2 Maximum Path Sum (any node to any node)
+Problem: maximum sum of node values on any path (path can start & end anywhere).
+Idea (O(n)): post-order; compute maxGain(node) = node.val + max(0, leftGain, rightGain). Update global maxSum = max(maxSum, node.val + max(0,left) + max(0,right)).
+class MaxPathSum {
+    private int maxSum = Integer.MIN_VALUE;
+
+    public int maxPathSum(Node root) {
+        maxSum = Integer.MIN_VALUE;
+        maxGain(root);
+        return maxSum;
+    }
+
+    private int maxGain(Node node) {
+        if (node == null) return 0;
+        int left = Math.max(0, maxGain(node.left));
+        int right = Math.max(0, maxGain(node.right));
+        int priceNew = node.data + left + right;
+        maxSum = Math.max(maxSum, priceNew);
+        return node.data + Math.max(left, right);
+    }
+}
+Complexity: O(n) time, O(h) space. 
+
+3 Lowest Common Ancestor (LCA) 
+1. Binary Tree (general)
+Idea: recursion: if node null or equals p/q return node. Recurse left & right. If both sides non-null → current is LCA. Else propagate non-null.
+class LCA {
+    public Node lowestCommonAncestor(Node root, Node p, Node q) {
+        if (root == null || root == p || root == q) return root;
+        Node left = lowestCommonAncestor(root.left, p, q);
+        Node right = lowestCommonAncestor(root.right, p, q);
+        if (left != null && right != null) return root;
+        return (left != null) ? left : right;
+    }
+}
+2. BST-optimized version (if tree is BST):
+public Node lcaBST(Node root, Node p, Node q) {
+    while (root != null) {
+        if (p.data < root.data && q.data < root.data) root = root.left;
+        else if (p.data > root.data && q.data > root.data) root = root.right;
+        else return root;
+    }
+    return null;
+}
+
+4 Check if Tree is Balanced 
+Definition: balanced if for every node |height(left)-height(right)| <= 1.
+Efficient idea (O(n)): post-order returns -1 if subtree unbalanced; otherwise returns height.
+class Balanced {
+    public boolean isBalanced(Node root) {
+        return checkHeight(root) != -1;
+    }
+
+    private int checkHeight(Node node) {
+        if (node == null) return 0;
+        int lh = checkHeight(node.left);
+        if (lh == -1) return -1;
+        int rh = checkHeight(node.right);
+        if (rh == -1) return -1;
+        if (Math.abs(lh - rh) > 1) return -1;
+        return Math.max(lh, rh) + 1;
+    }
+}
+Complexity: O(n) time, O(h) space.
+
+5 Check if Two Trees are Identical
+Idea: simple recursion — nodes equal & left subtrees identical & right identical. 
+class Identical {
+    public boolean isSameTree(Node p, Node q) {
+        if (p == null && q == null) return true;
+        if (p == null || q == null) return false;
+        if (p.data != q.data) return false;
+        return isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
+    }
+}
+
+6 Symmetric Tree (mirror)
+Idea: tree is symmetric if left subtree is mirror of right subtree.
+class Symmetric {
+    public boolean isSymmetric(Node root) {
+        if (root == null) return true;
+        return isMirror(root.left, root.right);
+    }
+    private boolean isMirror(Node a, Node b) {
+        if (a == null && b == null) return true;
+        if (a == null || b == null) return false;
+        if (a.data != b.data) return false;
+        return isMirror(a.left, b.right) && isMirror(a.right, b.left);
+    }
+}
+Iterative: use queue of pairs (compare pairs similarly).
+Complexity: O(n), O(h) space.
+
+7 Boundary Traversal (anticlockwise)
+Definition: print boundary nodes in order: root, left boundary (excluding leaves), leaves (left→right), right boundary (excluding leaves) in reverse.
+Step-by-step algorithm (high level)
+1 If root == null → return empty list.
+2 If root is not a leaf, add root.val to result.
+3 Walk the left boundary starting from root.left. For each node:
+  If it's not a leaf, add it.
+  Prefer going node = node.left; if left is null, go to node.right.
+  Stop when node becomes null.
+4 Add all leaf nodes (do a full tree traversal: left subtree then right subtree). When a node is leaf, add it.
+5 Walk the right boundary starting from root.right. For each node:
+  If it's not a leaf, push it onto a temporary stack (so we can add them in reverse later).
+  Prefer node = node.right; if right is null, go to node.left.
+  After traversal, pop the stack and append to result (this yields bottom→top order).
+6 Return result.
+Complexity
+Time: O(n) — every node is visited a constant number of times.
+Space: O(n) for the output list, plus recursion stack up to O(h) (h = tree height). Right-boundary stack uses at most O(h).
+// Assume TreeNode is defined as:
+class TreeNode {
+    int val;
+    TreeNode left, right;
+    TreeNode(int v) { val = v; }
+}
+
+import java.util.*;
+
+public class BoundaryTraversal {
+    public List<Integer> boundaryOfBinaryTree(TreeNode root) {
+        List<Integer> res = new ArrayList<>();
+        if (root == null) return res;
+
+        if (!isLeaf(root)) res.add(root.val);   // add root if not leaf
+        addLeftBoundary(root.left, res);
+        addLeaves(root, res);
+        addRightBoundary(root.right, res);
+
+        return res;
+    }
+
+    private boolean isLeaf(TreeNode node) {
+        return node != null && node.left == null && node.right == null;
+    }
+
+    // left boundary top-down excluding leaves
+    private void addLeftBoundary(TreeNode node, List<Integer> res) {
+        while (node != null) {
+            if (!isLeaf(node)) res.add(node.val);
+            if (node.left != null) node = node.left;
+            else node = node.right;
+        }
+    }
+
+    // right boundary bottom-up excluding leaves (use stack)
+    private void addRightBoundary(TreeNode node, List<Integer> res) {
+        Deque<Integer> stack = new ArrayDeque<>();
+        while (node != null) {
+            if (!isLeaf(node)) stack.push(node.val);
+            if (node.right != null) node = node.right;
+            else node = node.left;
+        }
+        while (!stack.isEmpty()) res.add(stack.pop());
+    }
+
+    // add all leaves in left-to-right order
+    private void addLeaves(TreeNode node, List<Integer> res) {
+        if (node == null) return;
+        if (isLeaf(node)) {
+            res.add(node.val);
+            return;
+        }
+        addLeaves(node.left, res);
+        addLeaves(node.right, res);
+    }
+}
+Edge cases to be careful about
+Single-node tree: return [root]. (Code handles this — root is leaf so we only add once.)
+Skewed tree (all left or all right): boundary should be all nodes in top→down order (no duplicates).
+When one subtree is missing: left/right boundary routines step into the alternate child (using node.right if node.left is null for left-boundary, and vice versa for right-boundary).
+
+8 Vertical Order Traversal
+Idea: BFS with column index (root column=0). Use a TreeMap<Integer, List<Integer>> or HashMap + track min/max column and then collect in order.
+class Vertical {
+    public List<List<Integer>> verticalOrder(Node root) {
+        List<List<Integer>> ans = new ArrayList<>();
+        if (root == null) return ans;
+
+        Map<Integer, List<Integer>> map = new TreeMap<>();
+        Queue<Pair> q = new LinkedList<>();
+        q.add(new Pair(root, 0));
+        while (!q.isEmpty()) {
+            Pair p = q.poll();
+            Node node = p.node;
+            int col = p.col;
+            map.computeIfAbsent(col, k -> new ArrayList<>()).add(node.data);
+            if (node.left != null) q.add(new Pair(node.left, col - 1));
+            if (node.right != null) q.add(new Pair(node.right, col + 1));
+        }
+        for (List<Integer> v : map.values()) ans.add(v);
+        return ans;
+    }
+
+    private static class Pair {
+        Node node; int col;
+        Pair(Node n, int c){ node=n; col=c; }
+    }
+}
+Complexity: O(n log k) if TreeMap used (k columns) or O(n) if HashMap + sort keys later; space O(n).
+Note: BFS preserves top→down order when multiple nodes share column.
+
+class Solution {
+    private static class Pair {
+        TreeNode node;
+        int row, col;
+        Pair(TreeNode n, int r, int c) { node = n; row = r; col = c; }
+    }
+
+    public List<List<Integer>> verticalTraversal(TreeNode root) {
+        List<List<Integer>> res = new ArrayList<>();
+        if (root == null) return res;
+
+        // PriorityQueue sorts based on col -> row -> value
+        PriorityQueue<Pair> pq = new PriorityQueue<>((a, b) -> {
+            if (a.col != b.col) return a.col - b.col;
+            else if (a.row != b.row) return a.row - b.row;
+            else return a.node.val - b.node.val;
+        });
+
+        // BFS with row & col
+        Queue<Pair> q = new LinkedList<>();
+        q.add(new Pair(root, 0, 0));
+
+        while (!q.isEmpty()) {
+            Pair p = q.poll();
+            pq.add(p);
+            if (p.node.left != null) q.add(new Pair(p.node.left, p.row + 1, p.col - 1));
+            if (p.node.right != null) q.add(new Pair(p.node.right, p.row + 1, p.col + 1));
+        }
+
+        // Grouping by column
+        Map<Integer, List<Integer>> map = new TreeMap<>();
+        while (!pq.isEmpty()) {
+            Pair p = pq.poll();
+            map.computeIfAbsent(p.col, k -> new ArrayList<>()).add(p.node.val);
+        }
+
+        res.addAll(map.values());
+        return res;
+    }
+}
+
+9 Zigzag Level Order Traversal
+Idea: BFS level-by-level, toggle direction. Use LinkedList<Integer> for level to addFirst when direction is right→left. 
+class Zigzag {
+    public List<List<Integer>> zigzagLevelOrder(Node root) {
+        List<List<Integer>> res = new ArrayList<>();
+        if (root == null) return res;
+        Queue<Node> q = new LinkedList<>();
+        q.add(root);
+        boolean leftToRight = true;
+        while (!q.isEmpty()) {
+            int size = q.size();
+            LinkedList<Integer> level = new LinkedList<>();
+            for (int i = 0; i < size; i++) {
+                Node node = q.poll();
+                if (leftToRight) level.addLast(node.data);
+                else level.addFirst(node.data);
+                if (node.left != null) q.add(node.left);
+                if (node.right != null) q.add(node.right);
+            }
+            res.add(level);
+            leftToRight = !leftToRight;
+        }
+        return res;
+    }
+}
+Complexity: O(n), O(w) space.
+
+Quick Interview Tips & Pitfalls
+Always state problem assumptions (count nodes vs edges for diameter; whether path sum allows negative values).
+Mention complexity and trade-offs (naive vs optimized).
+For recursion algorithms — mention recursion depth and worst-case stack overflow for skewed trees. Offer iterative or Morris (when applicable).
+Unit-test small cases: empty tree, single-node, skewed tree (linked-list style), full tree.
+For LCA in general tree, ensure both nodes exist if question requires validation.
+For vertical order, clarify ordering requirement when nodes share same column+row (specify BFS top→down).
+
+Suggested small test cases (practice)
+Empty tree (null) — handle gracefully.
+Single node — check diameter=1, symmetric true, etc.
+Skewed tree: 1→2→3 (right-skewed) — height/diameter edge cases.
+Balanced tree like your earlier example (1,2,3,4,5) — verify traversals & boundary.
+
+* Step 3 --- BST Master Notes
+Core BST Properties
+Definition: A binary search tree is a binary tree where:
+Left child < Parent node
+Right child > Parent node
+Both left & right subtrees must also be BSTs.
+Inorder traversal of a BST = Sorted order 
+Average time complexities:
+Search → O(log N) (best/avg), O(N) (worst if skewed tree)
+Insert → same as above
+Delete → same as above
+Trick: Balanced BSTs (like AVL, Red-Black Trees) keep O(log N). Regular BST may degrade.
+
+1. Insertion into BST
+Logic:
+Compare key with root.
+If key < root.val, go left.
+Else go right.
+Insert at null position.
+public TreeNode insert(TreeNode root, int key) {
+    if (root == null) return new TreeNode(key);
+    if (key < root.val) root.left = insert(root.left, key);
+    else if (key > root.val) root.right = insert(root.right, key);
+    return root;
+}
+Trick: In interviews, stress that duplicates are usually not allowed in BST (or handled specially).
+
+2. Searching in BST
+public boolean search(TreeNode root, int key) {
+    if (root == null) return false;
+    if (root.val == key) return true;
+    if (key < root.val) return search(root.left, key);
+    return search(root.right, key);
+}
+
+Iterative version (common in interviews):
+public boolean searchIter(TreeNode root, int key) {
+    while (root != null) {
+        if (key == root.val) return true;
+        if (key < root.val) root = root.left;
+        else root = root.right;
+    }
+    return false;
+}
+
+3. Deletion in BST
+Most asked, must understand 3 cases:
+Node is a leaf → just delete it.
+Node has one child → replace with child.
+Node has two children → replace with inorder successor (min in right subtree) or inorder predecessor (max in left).
+public TreeNode deleteNode(TreeNode root, int key) {
+    if (root == null) return null;
+    
+    if (key < root.val) root.left = deleteNode(root.left, key);
+    else if (key > root.val) root.right = deleteNode(root.right, key);
+    else {
+        // Case 1 & 2
+        if (root.left == null) return root.right;
+        else if (root.right == null) return root.left;
+
+        // Case 3: two children → get inorder successor
+        TreeNode minNode = findMin(root.right);
+        root.val = minNode.val;
+        root.right = deleteNode(root.right, minNode.val);
+    }
+    return root;
+}
+
+private TreeNode findMin(TreeNode node) {
+    while (node.left != null) node = node.left;
+    return node;
+}
+
+4. Validate if a Tree is BST
+Key trick: Every node must be in a valid range (min < node < max).
+public boolean isValidBST(TreeNode root) {
+    return helper(root, Long.MIN_VALUE, Long.MAX_VALUE);
+}
+
+private boolean helper(TreeNode node, long min, long max) {
+    if (node == null) return true;
+    if (node.val <= min || node.val >= max) return false;
+    return helper(node.left, min, node.val) && helper(node.right, node.val, max);
+}
+Interview trap: Checking only local left < root < right is WRONG. Must check full range.
+
+5. Find Min & Max in BST
+public int findMin(TreeNode root) {
+    while (root.left != null) root = root.left;
+    return root.val;
+}
+public int findMax(TreeNode root) {
+    while (root.right != null) root = root.right;
+    return root.val;
+}
+
+6. Floor & Ceil in BST
+Floor: Largest value ≤ key
+Ceil: Smallest value ≥ key
+public int floor(TreeNode root, int key) {
+    int ans = -1;
+    while (root != null) {
+        if (root.val == key) return root.val;
+        if (root.val > key) root = root.left;
+        else {
+            ans = root.val;
+            root = root.right;
+        }
+    }
+    return ans;
+}
+
+public int ceil(TreeNode root, int key) {
+    int ans = -1;
+    while (root != null) {
+        if (root.val == key) return root.val;
+        if (root.val < key) root = root.right;
+        else {
+            ans = root.val;
+            root = root.left;
+        }
+    }
+    return ans;
+}
+
+7. Successor & Predecessor in BST
+Inorder successor: Smallest node greater than target.
+Inorder predecessor: Largest node smaller than target.
+public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
+    TreeNode succ = null;
+    while (root != null) {
+        if (p.val < root.val) {
+            succ = root;
+            root = root.left;
+        } else root = root.right;
+    }
+    return succ;
+}
+
+public TreeNode inorderPredecessor(TreeNode root, TreeNode p) {
+    TreeNode pred = null;
+    while (root != null) {
+        if (p.val > root.val) {
+            pred = root;
+            root = root.right;
+        } else root = root.left;
+    }
+    return pred;
+}
+
+Interview Tricks & Quick Recall
+Inorder → Sorted → use for BST validation.
+Deletion case is most important → rehearse all 3 cases.
+Successor/Predecessor = go opposite subtree (right for successor, left for predecessor).
+If asked Floor/Ceil, always keep track of candidate answer while traversing.
+For large trees, iterative solutions often save stack space → mention in interview.
+
+* step 4 --- Core BST Problems
+1. Lowest Common Ancestor in BST
+Concept: In BST, values are ordered, so you don’t need full traversal like normal binary tree.
+Rule:
+If p.val < root.val && q.val < root.val → LCA lies in left subtree.
+If p.val > root.val && q.val > root.val → LCA lies in right subtree.
+Otherwise, root is LCA.
+Why Important? Very common interview problem. Tests BST property understanding.
+
+2. Convert Sorted Array to BST
+Concept: Use divide & conquer. Pick middle element as root → ensures height balance.
+Recursive approach:
+mid = (low+high)/2 → root.
+Left half → left subtree.
+Right half → right subtree.
+Why Important? Tests recursion + understanding of BST balance.
+
+3. Convert BST to Sorted Linked List
+Concept: Inorder traversal of BST gives sorted order.
+Use inorder traversal + keep track of “previous node” to link nodes as a list.
+Variants:
+Singly linked list.
+Doubly linked list.
+Why Important? Combines traversal + pointer manipulation.
+
+4. kth Smallest / kth Largest in BST
+Concept: Inorder traversal = sorted sequence.
+Maintain counter → return when counter == k.
+kth largest = reverse inorder.
+Why Important? Very frequent interview problem (Google/Amazon favorite). Tests recursion & traversal order.
+
+Practice Problems (Must-Do)
+1. Two Sum in BST
+Concept: Similar to 2-sum in array.
+Solutions:
+Inorder traversal → sorted array → 2-pointer check.
+Or: Use HashSet during traversal.
+Why Important? Combines BST traversal + array techniques.
+
+2. Range Sum of BST
+Concept: Use recursion.
+If node.val < low → only search right.
+If node.val > high → only search left.
+Else, add node value + search both.
+Why Important? Tests pruning using BST properties.
+
+3. Serialize and Deserialize BST
+Concept:
+Serialize = convert BST → string.
+Deserialize = convert string → BST.
+Trick:
+Preorder traversal + BST property (value ranges) for reconstruction.
+Much simpler than generic Binary Tree because of ordering.
+Why Important? Advanced, tests recursion, BST property, and design skills.
+
+step 5 --- 
+Self-Balancing Trees (AVL, Red-Black)
+Interviewers mostly ask conceptual questions:
+Why self-balancing trees are needed?
+How rotations work in AVL?
+Difference between AVL and Red-Black?
+Core Ideas:
+Problem with normal BST:
+If keys are inserted in sorted order → BST becomes skewed → O(n) operations.
+Self-balancing keeps height = O(log n).
+AVL Tree
+Balance factor = height(left) – height(right) ∈ {-1,0,1}
+If it goes out of range → rotation is applied.
+Rotations:
+LL Rotation
+RR Rotation
+LR Rotation
+RL Rotation
+Strictly balanced → faster searches but more rotations.
+
+Red-Black Tree
+Each node is Red or Black.
+Rules maintain “black-height balance”.
+Less strict than AVL → fewer rotations, better for insertion-heavy workloads.
+Used in Java’s TreeMap, C++ STL map/set.
+
+Interview Trick:
+AVL → better for read-heavy workloads.
+Red-Black → better for write-heavy workloads.
+
+Segment Tree (Range Queries)
+Used when array has frequent updates + range queries.
+Example:
+Find sum/min/max in range [L,R].
+Update an element → still log(n).
+Time Complexity:
+Build: O(n)
+Query: O(log n)
+Update: O(log n)
+Example Problem:
+Given an array of stock prices → answer queries like:
+“What’s the min price between day 2 and 6?”
+“Update price on day 4 to 500.”
+
+Fenwick Tree (Binary Indexed Tree)
+Same purpose as Segment Tree but simpler & uses less memory.
+Supports prefix sum queries and updates in O(log n).
+Great for problems like:
+Count of inversions in array.
+Prefix sums with updates.
